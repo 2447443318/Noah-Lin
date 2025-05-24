@@ -8,3 +8,6 @@ class Order:
         if self.is_buy:
             return f'Order:buy {self.num} stocks at price: ${self.price}\n'
         return f'Order:sell {self.num} stocks at price: ${self.price}\n' 
+
+if __name__ == '__main__':
+    print('please run trade_system.py to start!!!')
