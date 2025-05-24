@@ -1,56 +1,124 @@
 from order import Order
-from market import Market
+class Market:
+    def __init__(self, trading_code, ask_price, ask_number, bid_price, bid_number):
+        self.code = trading_code
+        self.ask_price = ask_price
+        self.ask_number = ask_number
+        self.bid_price = bid_price
+        self.bid_number = bid_number
 
-import random
-from time import sleep
+    def show(self):
+        print("Price|   |Number")
+        for i in range(len(self.ask_price)):
+            print(f"{self.ask_price[i]}|    |{self.ask_number[i]}")
+        print("——————————\nAsk in waiting\n")
 
-print("Welcom to Stock Market\n")
-is_code = False
-while not is_code:
-    name = input("Please input trading code(three intigers) so we can show the transaction:")
-    if len(name) > 3 or len(name) == 0:
-        print('Trading code should be three intigers!')
-        continue
-    for letter in name:
-        if letter not in '0123456789':
-            print('Code should not contain letters!')
-            is_code = False
-            break
-        is_code = True
+        print("bid in waiting\n——————————")
+        for i in range(len(self.bid_price)):
+            print(f"{self.bid_price[i]}|    |{self.bid_number[i]}")
+        print()
 
-ask_price = sorted(random.sample(range(30,50),5),reverse= True)
-ask_number = sorted(random.sample(range(100,200),5))
+    def order_dealing(self, order:Order):
+        print(order)
+        
+        if order.is_buy == True:
+            
+            if order.price < self.ask_price[-1]:
+            # buy_order can't make dealed immidiately have to wait
+                for i in range(len(self.bid_price)):
+                    if self.bid_price[i] == order.price:
+                        self.bid_number[i] += order.num
+                        return self.show()
+                    if self.bid_price[i] < order.price:
+                        self.bid_price = self.bid_price[:i] + [order.price] + self.bid_price[i:]
+                        self.bid_number = self.bid_number[:i] + [order.num] + self.bid_number[i:]                        
+                        return self.show()
+                    if i == len(self.bid_price)-1:
+                        self.bid_price = self.bid_price + [order.price] 
+                        self.bid_number = self.bid_number + [order.num]                        
+                        return self.show()
+            return self.deal_matching(order)
+            
+    
+        elif order.is_buy == False:
+            
+            if order.price > self.bid_price[0]:
+            # sell_order can't make deal immidiately have to wait
+                for i in range(len(self.ask_price)):
+                    if self.ask_price[i] == order.price:
+                        self.ask_number[i] += order.num
+                        return self.show()
+                    if self.ask_price[i] < order.price:
+                        self.ask_price = self.ask_price[:i] + [order.price] + self.ask_price[i:]
+                        self.ask_number = self.ask_number[:i] + [order.num] + self.ask_number[i:]                        
+                        return self.show()
+                    if i == len(self.ask_price) - 1:
+                        self.ask_price = self.ask_price + [order.price]
+                        self.ask_number = self.ask_number + [order.num]                     
+                        return self.show()
+        
+            return self.deal_matching(order)
+                
 
-bid_price = sorted(random.sample(range(1,25),5),reverse= True)
-bid_number = sorted(random.sample(range(100,200),5))
+    def deal_matching(self, order:Order):
+        if order.is_buy == True:
+            pop_index = len(self.ask_price)
+            for i in range(len(self.ask_price) - 1, -1, -1):
+                if order.price >= self.ask_price[i]:
+                    if self.ask_number[i] >= order.num:
+                        self.ask_number[i] -= order.num
+                        print(f'buy {order.num} stocks at price {self.ask_price[i]}')
+                        if self.ask_number[i] == 0:
+                            pop_index = i
+                        self.ask_price = self.ask_price[:pop_index]
+                        self.ask_number = self.ask_number[:pop_index]
+                        if i == 0:
+                            self.ask_number = []
+                            self.ask_price = []
+                            self.bid_number =  [order.num] + self.bid_number 
+                            self.bid_price = [order.price] + self.bid_price
+                        print()
+                        return self.show()
+                         
+                    else:
+                        order.num -= self.ask_number[i]
+                        pop_index = i
+                        print(f'buy {self.ask_number[i]} stocks at price {self.ask_price[i]}')
 
-market = Market(name, ask_price, ask_number, bid_price, bid_number)
+                elif order.price < self.ask_price[i]:
+                    self.ask_price = self.ask_price[:pop_index]
+                    self.ask_number = self.ask_number[:pop_index]
+                    if order.num != 0:
+                        self.bid_number =  [order.num] + self.bid_number 
+                        self.bid_price = [order.price] + self.bid_price
+                    if i == 0:
+                        self.ask_number = []
+                        self.ask_price = []
+                    print()  
+                    return self.show()
+        else:
+            pop_index = 1
+            for i in range(len(self.bid_price)):
+                if order.price <= self.bid_price[i]:
+                    if self.bid_number[i] >= order.num:
+                        self.bid_number[i] -= order.num
+                        print(f'sell {order.num} stocks at price {self.bid_price[i]}')
+                        if self.bid_number[i] == 0:
+                            pop_index = i + 1  
+                        self.bid_price = self.bid_price[pop_index:]
+                        self.bid_number = self.bid_number[pop_index:]
+                        print()
+                        return self.show()
+                    else:
+                        order.num -= self.bid_number[i]
+                        pop_index = i + 1
+                        print(f'sell {self.bid_number[i]} stocks at price {self.bid_price[i]}')
 
-print("Loading......")
-sleep(0.5)
-print("......\n\n")
-sleep(0.5)
-
-market.show()
-print()
-is_quit = False
-i = 1
-
-while not is_quit:
-    a = input(f"[{i}]please input your order(sell/buy price number): ").split()
-    i += 1
-    if a == ['quit']:
-        is_quit = True
-    elif len(a) !=3 or a[0] not in ['quit', 'buy','sell'] or int(a[1]) == 0 or int(a[1]) < 0 or int(a[2]) == 0:
-        print('Invalid order!')
-        continue
-    else:    
-        buy, price, number = a
-        if buy == "buy":
-            is_buy = True
-        elif buy == "sell":
-            is_buy = False  
-        order = Order(int(number), int(price), is_buy)
-        market.order_dealing(order)
-
-print('\nThank you for using our trading system!')
+                elif order.price > self.bid_price[i]:
+                    self.bid_price = self.bid_price[pop_index:]
+                    self.bid_number = self.bid_number[pop_index:]
+                    if order.num != 0:
+                        self.ask_number = self.ask_number + [order.num]
+                        self.ask_price = self.ask_price + [order.price]
+                    print()  
+                    return self.show()
