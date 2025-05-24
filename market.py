@@ -22,8 +22,7 @@ class Market:
         print(order)
         
         if order.is_buy == True:
-            
-            if order.price < self.ask_price[-1]:
+            if self.ask_price == [] or order.price < self.ask_price[-1]:
             # buy_order can't make dealed immidiately have to wait
                 for i in range(len(self.bid_price)):
                     if self.bid_price[i] == order.price:
@@ -41,8 +40,7 @@ class Market:
             
     
         elif order.is_buy == False:
-            
-            if order.price > self.bid_price[0]:
+            if self.bid_price == [] or order.price > self.bid_price[0]:
             # sell_order can't make deal immidiately have to wait
                 for i in range(len(self.ask_price)):
                     if self.ask_price[i] == order.price:
@@ -68,18 +66,12 @@ class Market:
                     if self.ask_number[i] >= order.num:
                         self.ask_number[i] -= order.num
                         print(f'buy {order.num} stocks at price {self.ask_price[i]}')
+                        
                         if self.ask_number[i] == 0:
                             pop_index = i
                         self.ask_price = self.ask_price[:pop_index]
                         self.ask_number = self.ask_number[:pop_index]
-                        if i == 0:
-                            self.ask_number = []
-                            self.ask_price = []
-                            self.bid_number =  [order.num] + self.bid_number 
-                            self.bid_price = [order.price] + self.bid_price
-                        print()
-                        return self.show()
-                         
+                     
                     else:
                         order.num -= self.ask_number[i]
                         pop_index = i
@@ -94,31 +86,40 @@ class Market:
                     if i == 0:
                         self.ask_number = []
                         self.ask_price = []
-                    print()  
-                    return self.show()
+                    print()
+                    return self.show()  
+                if i == 0:
+                    self.ask_number = []
+                    self.ask_price = []
+                    if order.num != 0:
+                        self.bid_number =  [order.num] + self.bid_number 
+                        self.bid_price = [order.price] + self.bid_price
+                    print()
+                    return self.show()    
         else:
-            pop_index = 1
-            for i in range(len(self.bid_price)):
+            i = 0
+            while i < len(self.bid_price):
                 if order.price <= self.bid_price[i]:
                     if self.bid_number[i] >= order.num:
-                        self.bid_number[i] -= order.num
                         print(f'sell {order.num} stocks at price {self.bid_price[i]}')
+                        self.bid_number[i] -= order.num
                         if self.bid_number[i] == 0:
-                            pop_index = i + 1  
-                        self.bid_price = self.bid_price[pop_index:]
-                        self.bid_number = self.bid_number[pop_index:]
-                        print()
-                        return self.show()
+                            del self.bid_price[i]
+                            del self.bid_number[i]
+                        else:
+                            i += 1
+                        order.num = 0
+                        break
                     else:
-                        order.num -= self.bid_number[i]
-                        pop_index = i + 1
                         print(f'sell {self.bid_number[i]} stocks at price {self.bid_price[i]}')
+                        order.num -= self.bid_number[i]
+                        del self.bid_price[i]
+                        del self.bid_number[i]
+                else:
+                    i += 1
 
-                elif order.price > self.bid_price[i]:
-                    self.bid_price = self.bid_price[pop_index:]
-                    self.bid_number = self.bid_number[pop_index:]
-                    if order.num != 0:
-                        self.ask_number = self.ask_number + [order.num]
-                        self.ask_price = self.ask_price + [order.price]
-                    print()  
-                    return self.show()
+            if order.num > 0:
+                self.ask_price.append(order.price)
+                self.ask_number.append(order.num)
+            
+            return self.show()
