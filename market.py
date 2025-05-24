@@ -27,22 +27,22 @@ class Market:
                 if not self.bid_price:
                     self.bid_price = [order.price]
                     self.bid_number = [order.num]
-                    print('buy_order can\'t make deal immidiately. You have to wait!\n')
+                    print('Sorry, buy_order can\'t make deal immidiately. You have to wait!\n')
                     return self.show()
                 for i in range(len(self.bid_price)):
                     if self.bid_price[i] == order.price:
                         self.bid_number[i] += order.num
-                        print('buy_order can\'t make deal immidiately. You have to wait!\n')
+                        print('Sorry, buy_order can\'t make deal immidiately. You have to wait!\n')
                         return self.show()
                     if self.bid_price[i] < order.price:
                         self.bid_price = self.bid_price[:i] + [order.price] + self.bid_price[i:]
                         self.bid_number = self.bid_number[:i] + [order.num] + self.bid_number[i:]  
-                        print('buy_order can\'t make deal immidiately. You have to wait!\n')                     
+                        print('Sorry, buy_order can\'t make deal immidiately. You have to wait!\n')                     
                         return self.show()
                     if i == len(self.bid_price)-1:
                         self.bid_price = self.bid_price + [order.price] 
                         self.bid_number = self.bid_number + [order.num]
-                        print('buy_order can\'t make deal immidiately. You have to wait!\n')                        
+                        print('Sorry, buy_order can\'t make deal immidiately. You have to wait!\n')                        
                         return self.show()
 
             return self.deal_matching(order)
@@ -54,22 +54,22 @@ class Market:
                 if not self.ask_price:  
                     self.ask_price = [order.price]
                     self.ask_number = [order.num]
-                    print('sell_order can\'t make deal immidiately. You have to wait!\n')
+                    print('Sorry, sell_order can\'t make deal immidiately. You have to wait!\n')
                     return self.show()
                 for i in range(len(self.ask_price)):
                     if self.ask_price[i] == order.price:
                         self.ask_number[i] += order.num
-                        print('sell_order can\'t make deal immidiately. You have to wait!\n')
+                        print('Sorry, sell_order can\'t make deal immidiately. You have to wait!\n')
                         return self.show()
                     if self.ask_price[i] < order.price:
                         self.ask_price = self.ask_price[:i] + [order.price] + self.ask_price[i:]
                         self.ask_number = self.ask_number[:i] + [order.num] + self.ask_number[i:]
-                        print('sell_order can\'t make deal immidiately. You have to wait!\n')                        
+                        print('Sorry, sell_order can\'t make deal immidiately. You have to wait!\n')                        
                         return self.show()
                     if i == len(self.ask_price) - 1:
                         self.ask_price = self.ask_price + [order.price]
                         self.ask_number = self.ask_number + [order.num] 
-                        print('sell_order can\'t make deal immidiately. You have to wait!\n')                    
+                        print('Sorry, sell_order can\'t make deal immidiately. You have to wait!\n')                    
                         return self.show()
         
             return self.deal_matching(order)
