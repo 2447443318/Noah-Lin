@@ -6,5 +6,5 @@ class Order:
 
     def __str__(self):
         if self.is_buy:
-            return f'Order:buy {self.num} stocks on price: ${self.price}\n'
-        return f'Order:sell {self.num} stocks on price: ${self.price}\n' 
+            return f'Order:buy {self.num} stocks at price: ${self.price}\n'
+        return f'Order:sell {self.num} stocks at price: ${self.price}\n' 
