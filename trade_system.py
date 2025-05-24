@@ -51,6 +51,6 @@ while not is_quit:
         elif buy == "sell":
             is_buy = False  
         order = Order(int(number), int(price), is_buy)
-        market.order_dealing(order)
+        market.order_waiting(order)
 
 print('\nThank you for using our trading system!')
