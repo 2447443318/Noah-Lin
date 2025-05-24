@@ -140,3 +140,6 @@ class Market:
                 self.ask_number.append(order.num)
                 print('Remaining order is wating!\n')
             return self.show()
+
+if __name__ == '__main__':
+    print('please run trade_system.py to start!!!')
