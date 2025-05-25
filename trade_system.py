@@ -41,16 +41,15 @@ while not is_quit:
     i += 1
     if a == ['quit']:
         is_quit = True
-    elif len(a) !=3 or a[0] not in ['buy','sell'] or int(a[1]) == 0 or int(a[1]) < 0 or int(a[2]) == 0:
+    elif len(a) !=3 or a[0] not in ['buy','sell'] or int(a[1]) <= 0 or int(a[2]) <= 0:
         print('Invalid order!')
-        continue
-    else:    
-        buy, price, number = a
-        if buy == "buy":
-            is_buy = True
-        elif buy == "sell":
-            is_buy = False  
-        order = Order(int(number), int(price), is_buy)
-        market.order_waiting(order)
+        continue   
+    buy, price, number = a
+    if buy == "buy":
+        is_buy = True
+    elif buy == "sell":
+        is_buy = False  
+    order = Order(int(number), int(price), is_buy)
+    market.order_waiting(order)
 
 print('\nThank you for using our trading system!')
