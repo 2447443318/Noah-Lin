@@ -109,8 +109,7 @@ class Market:
                 if not is_inserted:
                     self.bid_price.append(order.price)
                     self.bid_number.append(order.num)
-
-            print('Remaining order is wating!\n')
+                print(f'Remaining {order.num} stocks buy_order is wating!\n')
             return self.show()
 
         else:
@@ -138,7 +137,7 @@ class Market:
             if order.num > 0:
                 self.ask_price.append(order.price)
                 self.ask_number.append(order.num)
-                print('Remaining order is wating!\n')
+                print('Remaining {order.num} stocks sell_order is wating!\n')
             return self.show()
 
 
