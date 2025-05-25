@@ -84,13 +84,13 @@ class Market:
                     self.ask_number[i] -= order.num
                     order.num = 0
                     if self.ask_number[i] == 0:
-                        del self.ask_price[i]
-                        del self.ask_number[i]
+                        self.ask_price.pop(i)
+                        self.ask_number.pop(i)
                 else:
                     print(f'buy {self.ask_number[i]} stocks at price {self.ask_price[i]}')
                     order.num -= self.ask_number[i]
-                    del self.ask_price[i]
-                    del self.ask_number[i]
+                    self.ask_price.pop(i)
+                    self.ask_number.pop(i)
                 i -= 1
 
             if order.num > 0:
@@ -121,8 +121,8 @@ class Market:
                         print(f'sell {order.num} stocks at price {self.bid_price[i]}')
                         self.bid_number[i] -= order.num
                         if self.bid_number[i] == 0:
-                            del self.bid_price[i]
-                            del self.bid_number[i]
+                            self.bid_price.pop(i)
+                            self.bid_number.pop(i)
                         else:
                             i += 1
                         order.num = 0
@@ -130,8 +130,8 @@ class Market:
                     else:
                         print(f'sell {self.bid_number[i]} stocks at price {self.bid_price[i]}')
                         order.num -= self.bid_number[i]
-                        del self.bid_price[i]
-                        del self.bid_number[i]
+                        self.bid_price.pop(i)
+                        self.bid_number.pop(i)
                 else:
                     i += 1
 
@@ -140,6 +140,7 @@ class Market:
                 self.ask_number.append(order.num)
                 print('Remaining order is wating!\n')
             return self.show()
+
 
 if __name__ == '__main__':
     print('please run trade_system.py to start!!!')
