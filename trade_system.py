@@ -18,11 +18,11 @@ while not is_code:
             break
         is_code = True
 
-ask_price = sorted(random.sample(range(30,50),5),reverse= True)
-ask_number = sorted(random.sample(range(100,200),5))
+ask_price = sorted(random.sample(range(30,50),7),reverse= True)
+ask_number = sorted(random.sample(range(100,200),7))
 
-bid_price = sorted(random.sample(range(1,25),5),reverse= True)
-bid_number = sorted(random.sample(range(100,200),5))
+bid_price = sorted(random.sample(range(1,25),7),reverse= True)
+bid_number = sorted(random.sample(range(100,200),7))
 
 market = Market(name, ask_price, ask_number, bid_price, bid_number)
 
@@ -41,7 +41,7 @@ while not is_quit:
     i += 1
     if a == ['quit']:
         is_quit = True
-    elif len(a) !=3 or a[0] not in ['quit', 'buy','sell'] or int(a[1]) == 0 or int(a[1]) < 0 or int(a[2]) == 0:
+    elif len(a) !=3 or a[0] not in ['buy','sell'] or int(a[1]) == 0 or int(a[1]) < 0 or int(a[2]) == 0:
         print('Invalid order!')
         continue
     else:    
